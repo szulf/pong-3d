@@ -14,8 +14,6 @@ project(pong
 
 include(FetchContent)
 
-find_package(OpenGL REQUIRED)
-
 FetchContent_Declare(
     glfw
     URL https://github.com/glfw/glfw/archive/refs/tags/3.4.tar.gz
@@ -35,7 +33,10 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(glfw glad glm)
 
-add_executable(pong src/main.cpp)
+add_executable(pong src/main.cpp
+    src/Game.cpp include/Game.hpp
+    src/Window.cpp include/Window.hpp
+)
 
 target_include_directories(pong PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(pong PUBLIC glfw glad glm)
