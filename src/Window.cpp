@@ -13,3 +13,12 @@ Window::Window(const std::string& title, int width, int height) : m_width(width)
 Window::~Window() {
     glfwDestroyWindow(m_window);
 }
+
+void Window::init_viewport() {
+    glViewport(0, 0, m_width, m_height);
+    glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
+}
+
+void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
+}

@@ -7,6 +7,9 @@ public:
     ~Shader();
 
     void bind();
+
+    template <typename T>
+    void set_uniform(const std::string& name, T value);
 private:
     int m_id;
 };

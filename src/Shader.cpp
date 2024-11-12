@@ -1,5 +1,7 @@
 #include "Shader.hpp"
 #include "glad/glad.h"
+#include "glm/ext/matrix_float4x4.hpp"
+#include "glm/gtc/type_ptr.hpp"
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
@@ -73,4 +75,14 @@ Shader::~Shader() {
 
 void Shader::bind() {
     glUseProgram(m_id);
+}
+
+template <>
+void Shader::set_uniform<float>(const std::string& name, float value) {
+    glUniform1f(glGetUniformLocation(m_id, name.c_str()), value);
+}
+
+template <>
+void Shader::set_uniform<glm::mat4>(const std::string& name, glm::mat4 value) {
+    glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }

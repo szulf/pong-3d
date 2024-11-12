@@ -42,3 +42,6 @@ add_executable(pong src/main.cpp
 target_include_directories(pong PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(pong PUBLIC glfw glad glm)
 
+target_compile_options(pong PRIVATE
+    -Wall -Werror -pedantic
+)
