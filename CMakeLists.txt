@@ -36,6 +36,7 @@ FetchContent_MakeAvailable(glfw glad glm)
 add_executable(pong src/main.cpp
     src/Game.cpp include/Game.hpp
     src/Window.cpp include/Window.hpp
+    src/Shader.cpp include/Shader.hpp
 )
 
 target_include_directories(pong PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

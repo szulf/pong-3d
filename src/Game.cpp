@@ -1,5 +1,7 @@
 #include "Game.hpp"
+#include "Shader.hpp"
 #include "Window.hpp"
+#include <array>
 #include <stdexcept>
 
 Game::Game(const std::string& title, int width, int height) {
@@ -23,9 +25,36 @@ Game::Game(const std::string& title, int width, int height) {
 }
 
 void Game::run() {
+    auto vertices = std::to_array({
+        -0.1f, -0.5f, 0.5f,
+        -0.1f, 0.5f, 0.5f,
+        0.1f, -0.5f, 0.5f,
+
+        -0.1f, 0.5f, 0.5f,
+        0.1f, -0.5f, 0.5f,
+        0.1f, 0.5f, 0.5f,
+    });
+
+    unsigned int vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    unsigned int vbo;
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    Shader shader{"../src/vert.glsl", "../src/frag.glsl"};
+    shader.bind();
+
     while (!glfwWindowShouldClose(m_window->get_window())) {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glfwSwapBuffers(m_window->get_window());
 
