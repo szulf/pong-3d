@@ -1,7 +1,9 @@
 #version 330 core
 
-out vec3 color;
+in float color;
+
+out vec3 out_color;
 
 void main() {
-    color = vec3(1.0f, 1.0f, 1.0f);
+    out_color = vec3(color, color, color);
 }

@@ -4,6 +4,7 @@
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_float4x4.hpp"
 #include "glm/ext/matrix_transform.hpp"
+#include "glm/ext/vector_float2.hpp"
 #include "glm/trigonometric.hpp"
 #include <algorithm>
 #include <array>
@@ -33,57 +34,91 @@ Game::Game(const std::string& title, int width, int height) {
 
 void Game::run() {
     auto rect_vertices = std::to_array({
-        -0.1f, -0.5f, 0.1f,
-        -0.1f, 0.5f, 0.1f,
-        0.1f, -0.5f, 0.1f,
-        -0.1f, 0.5f, 0.1f,
-        0.1f, -0.5f, 0.1f,
-        0.1f, 0.5f, 0.1f,
+        -0.1f, -0.5f, 0.1f, 0.5f,
+        -0.1f, 0.5f, 0.1f, 0.5f,
+        0.1f, -0.5f, 0.1f, 0.5f,
+        -0.1f, 0.5f, 0.1f, 0.5f,
+        0.1f, -0.5f, 0.1f, 0.5f,
+        0.1f, 0.5f, 0.1f, 0.5f,
 
-        -0.1f, -0.5f, -0.1f,
-        -0.1f, 0.5f, -0.1f,
-        0.1f, -0.5f, -0.1f,
-        -0.1f, 0.5f, -0.1f,
-        0.1f, -0.5f, -0.1f,
-        0.1f, 0.5f, -0.1f,
+        -0.1f, -0.5f, -0.1f, 0.5f,
+        -0.1f, 0.5f, -0.1f, 0.5f,
+        0.1f, -0.5f, -0.1f, 0.5f,
+        -0.1f, 0.5f, -0.1f, 0.5f,
+        0.1f, -0.5f, -0.1f, 0.5f,
+        0.1f, 0.5f, -0.1f, 0.5f,
 
-        -0.1f, 0.5f, -0.1f,
-        -0.1f, 0.5f, 0.1f,
-        -0.1f, -0.5f, -0.1f,
-        -0.1f, 0.5f, 0.1f,
-        -0.1f, -0.5f, -0.1f,
-        -0.1f, -0.5f, 0.1f,
+        -0.1f, 0.5f, -0.1f, 0.5f,
+        -0.1f, 0.5f, 0.1f, 0.5f,
+        -0.1f, -0.5f, -0.1f, 0.5f,
+        -0.1f, 0.5f, 0.1f, 0.5f,
+        -0.1f, -0.5f, -0.1f, 0.5f,
+        -0.1f, -0.5f, 0.1f, 0.5f,
 
-        0.1f, 0.5f, -0.1f,
-        0.1f, 0.5f, 0.1f,
-        0.1f, -0.5f, -0.1f,
-        0.1f, 0.5f, 0.1f,
-        0.1f, -0.5f, -0.1f,
-        0.1f, -0.5f, 0.1f,
+        0.1f, 0.5f, -0.1f, 0.5f,
+        0.1f, 0.5f, 0.1f, 0.5f,
+        0.1f, -0.5f, -0.1f, 0.5f,
+        0.1f, 0.5f, 0.1f, 0.5f,
+        0.1f, -0.5f, -0.1f, 0.5f,
+        0.1f, -0.5f, 0.1f, 0.5f,
 
-        -0.1f, 0.5f, 0.1f,
-        -0.1f, 0.5f, -0.1f,
-        0.1f, 0.5f, -0.1f,
-        -0.1f, 0.5f, 0.1f,
-        0.1f, 0.5f, -0.1f,
-        0.1f, 0.5f, 0.1f,
+        -0.1f, 0.5f, 0.1f, 0.5f,
+        -0.1f, 0.5f, -0.1f, 0.5f,
+        0.1f, 0.5f, -0.1f, 0.5f,
+        -0.1f, 0.5f, 0.1f, 0.5f,
+        0.1f, 0.5f, -0.1f, 0.5f,
+        0.1f, 0.5f, 0.1f, 0.5f,
 
-        -0.1f, -0.5f, 0.1f,
-        -0.1f, -0.5f, -0.1f,
-        0.1f, -0.5f, -0.1f,
-        -0.1f, -0.5f, 0.1f,
-        0.1f, -0.5f, -0.1f,
-        0.1f, -0.5f, 0.1f,
+        -0.1f, -0.5f, 0.1f, 0.5f,
+        -0.1f, -0.5f, -0.1f, 0.5f,
+        0.1f, -0.5f, -0.1f, 0.5f,
+        -0.1f, -0.5f, 0.1f, 0.5f,
+        0.1f, -0.5f, -0.1f, 0.5f,
+        0.1f, -0.5f, 0.1f, 0.5f,
     });
 
     auto square_vertices = std::to_array({
-        -0.1f, -0.1f, 0.5f,
-        -0.1f, 0.1f, 0.5f,
-        0.1f, -0.1f, 0.5f,
+        -0.1f, -0.1f, 0.1f, 1.0f,
+        -0.1f, 0.1f, 0.1f, 1.0f,
+        0.1f, -0.1f, 0.1f, 1.0f,
+        -0.1f, 0.1f, 0.1f, 1.0f,
+        0.1f, -0.1f, 0.1f, 1.0f,
+        0.1f, 0.1f, 0.1f, 1.0f,
 
-        -0.1f, 0.1f, 0.5f,
-        0.1f, -0.1f, 0.5f,
-        0.1f, 0.1f, 0.5f,
+        -0.1f, -0.1f, -0.1f, 1.0f,
+        -0.1f, 0.1f, -0.1f, 1.0f,
+        0.1f, -0.1f, -0.1f, 1.0f,
+        -0.1f, 0.1f, -0.1f, 1.0f,
+        0.1f, -0.1f, -0.1f, 1.0f,
+        0.1f, 0.1f, -0.1f, 1.0f,
+
+        -0.1f, 0.1f, -0.1f, 1.0f,
+        -0.1f, 0.1f, 0.1f, 1.0f,
+        -0.1f, -0.1f, -0.1f, 1.0f,
+        -0.1f, 0.1f, 0.1f, 1.0f,
+        -0.1f, -0.1f, -0.1f, 1.0f,
+        -0.1f, -0.1f, 0.1f, 1.0f,
+
+        0.1f, 0.1f, -0.1f, 1.0f,
+        0.1f, 0.1f, 0.1f, 1.0f,
+        0.1f, -0.1f, -0.1f, 1.0f,
+        0.1f, 0.1f, 0.1f, 1.0f,
+        0.1f, -0.1f, -0.1f, 1.0f,
+        0.1f, -0.1f, 0.1f, 1.0f,
+
+        -0.1f, 0.1f, 0.1f, 1.0f,
+        -0.1f, 0.1f, -0.1f, 1.0f,
+        0.1f, 0.1f, -0.1f, 1.0f,
+        -0.1f, 0.1f, 0.1f, 1.0f,
+        0.1f, 0.1f, -0.1f, 1.0f,
+        0.1f, 0.1f, 0.1f, 1.0f,
+
+        -0.1f, -0.1f, 0.1f, 1.0f,
+        -0.1f, -0.1f, -0.1f, 1.0f,
+        0.1f, -0.1f, -0.1f, 1.0f,
+        -0.1f, -0.1f, 0.1f, 1.0f,
+        0.1f, -0.1f, -0.1f, 1.0f,
+        0.1f, -0.1f, 0.1f, 1.0f,
     });
 
     unsigned int rect_vao;
@@ -94,8 +129,10 @@ void Game::run() {
     glGenBuffers(1, &rect_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, rect_vbo);
     glBufferData(GL_ARRAY_BUFFER, rect_vertices.size() * sizeof(float), rect_vertices.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, 4 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 1, GL_FLOAT, false, 4 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     unsigned int square_vao;
     glGenVertexArrays(1, &square_vao);
@@ -105,8 +142,10 @@ void Game::run() {
     glGenBuffers(1, &square_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, square_vbo);
     glBufferData(GL_ARRAY_BUFFER, square_vertices.size() * sizeof(float), square_vertices.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, 4 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 1, GL_FLOAT, false, 4 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     Shader shader{"../src/vert.glsl", "../src/frag.glsl"};
     shader.bind();
@@ -114,6 +153,7 @@ void Game::run() {
     glEnable(GL_DEPTH_TEST);
 
     float y_pos = 0.0f;
+    glm::vec2 square_pos = {0.0f, 0.0f};
 
     while (!glfwWindowShouldClose(m_window->get_window())) {
         if (glfwGetKey(m_window->get_window(), GLFW_KEY_UP) == GLFW_PRESS) {
@@ -143,19 +183,22 @@ void Game::run() {
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         model = glm::mat4{1.0f};
-        model = glm::rotate(model, glm::radians(-30.0f), {1.0f, 0.0f, 0.0f});
+        model = glm::rotate(model, glm::radians(-40.0f), {1.0f, 0.0f, 0.0f});
         model = glm::translate(model, {1.0f, 0.0f, 0.0f});
         shader.set_uniform("model", model);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        // glBindVertexArray(square_vao);
-        //
-        // model = glm::mat4{1.0f};
-        // model = glm::translate(model, {0.0f, 0.0f, 0.0f});
-        // shader.set_uniform("model", model);
-        //
-        // glDrawArrays(GL_TRIANGLES, 0, 6);
+        glBindVertexArray(square_vao);
+
+        square_pos += glm::vec2{-0.001f, 0.0f};
+
+        model = glm::mat4{1.0f};
+        model = glm::rotate(model, glm::radians(-40.0f), {1.0f, 0.0f, 0.0f});
+        model = glm::translate(model, {square_pos.x, square_pos.y, 0.0f});
+        shader.set_uniform("model", model);
+
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glfwSwapBuffers(m_window->get_window());
 
