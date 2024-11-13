@@ -5,6 +5,7 @@
 #include "glm/ext/matrix_float4x4.hpp"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/trigonometric.hpp"
+#include <algorithm>
 #include <array>
 #include <stdexcept>
 
@@ -112,15 +113,24 @@ void Game::run() {
 
     glEnable(GL_DEPTH_TEST);
 
+    float y_pos = 0.0f;
+
     while (!glfwWindowShouldClose(m_window->get_window())) {
+        if (glfwGetKey(m_window->get_window(), GLFW_KEY_UP) == GLFW_PRESS) {
+            y_pos = std::min(y_pos + 0.01f, 1.0f);
+        }
+        if (glfwGetKey(m_window->get_window(), GLFW_KEY_DOWN) == GLFW_PRESS) {
+            y_pos = std::max(y_pos - 0.01f, -1.0f);
+        }
+
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glBindVertexArray(rect_vao);
 
         glm::mat4 model{1.0f};
-        model = glm::translate(model, {-1.0f, 0.0f, 0.0f});
-        model = glm::rotate(model, glm::radians(-45.0f), {1.0f, 0.0f, 0.0f});
+        model = glm::rotate(model, glm::radians(-40.0f), {1.0f, 0.0f, 0.0f});
+        model = glm::translate(model, {-1.0f, y_pos, 0.0f});
         shader.set_uniform("model", model);
 
         glm::mat4 view{1.0f};
@@ -133,8 +143,8 @@ void Game::run() {
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         model = glm::mat4{1.0f};
+        model = glm::rotate(model, glm::radians(-30.0f), {1.0f, 0.0f, 0.0f});
         model = glm::translate(model, {1.0f, 0.0f, 0.0f});
-        model = glm::rotate(model, glm::radians(-45.0f), {1.0f, 0.0f, 0.0f});
         shader.set_uniform("model", model);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
