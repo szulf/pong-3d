@@ -21,7 +21,7 @@ Shader::Shader(const std::string& vert_file, const std::string& frag_file) {
 
     int status = 0;
 
-    int vert_shader = glCreateShader(GL_VERTEX_SHADER);
+    unsigned int vert_shader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vert_shader, 1, &vert_src_cstr, nullptr);
     glCompileShader(vert_shader);
 
@@ -35,7 +35,7 @@ Shader::Shader(const std::string& vert_file, const std::string& frag_file) {
         throw std::runtime_error{"Error compiling vertex shader"};
     }
 
-    int frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    unsigned int frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(frag_shader, 1, &frag_src_cstr, nullptr);
     glCompileShader(frag_shader);
 

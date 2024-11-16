@@ -21,7 +21,7 @@ FetchContent_Declare(
 )
 
 FetchContent_Declare(
-    glm 
+    glm
     URL https://github.com/g-truc/glm/archive/refs/tags/1.0.1.tar.gz
     FIND_PACKAGE_ARGS 1.0.1
 )
@@ -37,6 +37,8 @@ add_executable(pong src/main.cpp
     src/Game.cpp include/Game.hpp
     src/Window.cpp include/Window.hpp
     src/Shader.cpp include/Shader.hpp
+    src/VertexArray.cpp include/VertexArray.hpp
+    src/VertexBuffer.cpp include/VertexBuffer.hpp
 )
 
 target_include_directories(pong PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

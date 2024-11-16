@@ -1,5 +1,7 @@
 #include "Game.hpp"
 #include "Shader.hpp"
+#include "VertexArray.hpp"
+#include "VertexBuffer.hpp"
 #include "Window.hpp"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_float4x4.hpp"
@@ -9,6 +11,7 @@
 #include <algorithm>
 #include <array>
 #include <stdexcept>
+#include <vector>
 
 Game::Game(const std::string& title, int width, int height) {
     if (!glfwInit()) {
@@ -33,7 +36,7 @@ Game::Game(const std::string& title, int width, int height) {
 }
 
 void Game::run() {
-    auto rect_vertices = std::to_array({
+    auto rect_vertices = std::vector{
         -0.1f, -0.5f, 0.1f, 0.5f,
         -0.1f, 0.5f, 0.1f, 0.5f,
         0.1f, -0.5f, 0.1f, 0.5f,
@@ -75,9 +78,9 @@ void Game::run() {
         -0.1f, -0.5f, 0.1f, 0.5f,
         0.1f, -0.5f, -0.1f, 0.5f,
         0.1f, -0.5f, 0.1f, 0.5f,
-    });
+    };
 
-    auto square_vertices = std::to_array({
+    auto square_vertices = std::vector{
         -0.1f, -0.1f, 0.1f, 1.0f,
         -0.1f, 0.1f, 0.1f, 1.0f,
         0.1f, -0.1f, 0.1f, 1.0f,
@@ -119,33 +122,19 @@ void Game::run() {
         -0.1f, -0.1f, 0.1f, 1.0f,
         0.1f, -0.1f, -0.1f, 1.0f,
         0.1f, -0.1f, 0.1f, 1.0f,
-    });
+    };
 
-    unsigned int rect_vao;
-    glGenVertexArrays(1, &rect_vao);
-    glBindVertexArray(rect_vao);
+    VertexArray rect_vao;
 
-    unsigned int rect_vbo;
-    glGenBuffers(1, &rect_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, rect_vbo);
-    glBufferData(GL_ARRAY_BUFFER, rect_vertices.size() * sizeof(float), rect_vertices.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, 4 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 1, GL_FLOAT, false, 4 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    VertexBuffer rect_vbo{rect_vertices, 4};
+    rect_vbo.set_attrib_pointer<float>(3, 0);
+    rect_vbo.set_attrib_pointer<float>(1, 3);
 
-    unsigned int square_vao;
-    glGenVertexArrays(1, &square_vao);
-    glBindVertexArray(square_vao);
+    VertexArray square_vao;
 
-    unsigned int square_vbo;
-    glGenBuffers(1, &square_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, square_vbo);
-    glBufferData(GL_ARRAY_BUFFER, square_vertices.size() * sizeof(float), square_vertices.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, 4 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 1, GL_FLOAT, false, 4 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    VertexBuffer square_vbo{square_vertices, 4};
+    square_vbo.set_attrib_pointer<float>(3, 0);
+    square_vbo.set_attrib_pointer<float>(1, 3);
 
     Shader shader{"../src/vert.glsl", "../src/frag.glsl"};
     shader.bind();
@@ -159,6 +148,7 @@ void Game::run() {
         if (glfwGetKey(m_window->get_window(), GLFW_KEY_UP) == GLFW_PRESS) {
             y_pos = std::min(y_pos + 0.01f, 1.0f);
         }
+
         if (glfwGetKey(m_window->get_window(), GLFW_KEY_DOWN) == GLFW_PRESS) {
             y_pos = std::max(y_pos - 0.01f, -1.0f);
         }
@@ -166,7 +156,7 @@ void Game::run() {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glBindVertexArray(rect_vao);
+        rect_vao.bind();
 
         glm::mat4 model{1.0f};
         model = glm::rotate(model, glm::radians(-40.0f), {1.0f, 0.0f, 0.0f});
@@ -189,7 +179,7 @@ void Game::run() {
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        glBindVertexArray(square_vao);
+        square_vao.bind();
 
         square_pos += glm::vec2{-0.001f, 0.0f};
 
