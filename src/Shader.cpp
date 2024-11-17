@@ -50,7 +50,6 @@ Shader::Shader(const std::string& vert_file, const std::string& frag_file) {
         throw std::runtime_error{"Error compiling fragment shader"};
     }
 
-
     m_id = glCreateProgram();
     glAttachShader(m_id, vert_shader);
     glAttachShader(m_id, frag_shader);
@@ -67,6 +66,8 @@ Shader::Shader(const std::string& vert_file, const std::string& frag_file) {
         std::printf("%s\n", info_log.data());
         throw std::runtime_error("Error linking shader program");
     }
+
+    glUseProgram(m_id);
 }
 
 Shader::~Shader() {

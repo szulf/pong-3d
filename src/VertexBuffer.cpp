@@ -2,7 +2,7 @@
 #include "Window.hpp"
 #include <cstdio>
 
-VertexBuffer::VertexBuffer(const std::vector<float>& data, unsigned int vertex_stride) : m_vertex_stride{vertex_stride} {
+VertexBuffer::VertexBuffer(const std::vector<float>& data, unsigned int vertex_stride) : m_vertex_stride{vertex_stride}, m_pos{0} {
     glGenBuffers(1, &m_id);
     glBindBuffer(GL_ARRAY_BUFFER, m_id);
 
@@ -13,7 +13,7 @@ VertexBuffer::~VertexBuffer() {
     glDeleteBuffers(1, &m_id);
 }
 
-void VertexBuffer::bind() {
+inline void VertexBuffer::bind() {
     glBindBuffer(GL_ARRAY_BUFFER, m_id);
 }
 

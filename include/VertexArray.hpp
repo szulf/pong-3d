@@ -7,6 +7,6 @@ public:
 
     void bind();
 
-private:
+// private:
     unsigned int m_id;
 };
