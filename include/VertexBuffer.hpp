@@ -7,7 +7,7 @@ public:
     VertexBuffer(const std::vector<float>& data, unsigned int vertex_stride);
     ~VertexBuffer();
 
-    inline void bind();
+    void bind();
 
     template <typename T>
     void set_attrib_pointer(unsigned int size, unsigned int pointer);

@@ -13,13 +13,13 @@ VertexBuffer::~VertexBuffer() {
     glDeleteBuffers(1, &m_id);
 }
 
-inline void VertexBuffer::bind() {
+void VertexBuffer::bind() {
     glBindBuffer(GL_ARRAY_BUFFER, m_id);
 }
 
 template <>
 void VertexBuffer::set_attrib_pointer<float>(unsigned int size, unsigned int pointer) {
-    glVertexAttribPointer(m_pos, size, GL_FLOAT, false, m_vertex_stride * sizeof(float), (void*)(pointer * sizeof(float)));
+    glVertexAttribPointer(m_pos, size, GL_FLOAT, false, m_vertex_stride * sizeof(float), reinterpret_cast<void*>(pointer * sizeof(float)));
     glEnableVertexAttribArray(m_pos);
 
     m_pos++;

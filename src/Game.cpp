@@ -8,6 +8,9 @@
 #include "glm/ext/matrix_float4x4.hpp"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/trigonometric.hpp"
+#include <bits/chrono.h>
+#define GLM_ENABLE_EXPERIMENTAL false
+#include "glm/gtx/string_cast.hpp"
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
@@ -71,6 +74,12 @@ Game::Game(const std::string& title, int width, int height) {
 }
 
 void Game::run() {
+    constexpr auto rect_width = 0.2f;
+    constexpr auto rect_height = 1.0f;
+
+    constexpr auto cube_width = 0.2f;
+    constexpr auto cube_height = 0.2f;
+
     std::vector rect_vertices{
         -0.1f, -0.5f, 0.1f, 0.5f,
         -0.1f, 0.5f, 0.1f, 0.5f,
@@ -160,17 +169,17 @@ void Game::run() {
     };
 
     VertexArray rect_vao;
-    VertexArray square_vao;
+    VertexArray cube_vao;
 
     rect_vao.bind();
     VertexBuffer rect_vbo{rect_vertices, 4};
     rect_vbo.set_attrib_pointer<float>(3, 0);
     rect_vbo.set_attrib_pointer<float>(1, 3);
 
-    square_vao.bind();
-    VertexBuffer square_vbo{square_vertices, 4};
-    square_vbo.set_attrib_pointer<float>(3, 0);
-    square_vbo.set_attrib_pointer<float>(1, 3);
+    cube_vao.bind();
+    VertexBuffer cube_vbo{square_vertices, 4};
+    cube_vbo.set_attrib_pointer<float>(3, 0);
+    cube_vbo.set_attrib_pointer<float>(1, 3);
 
     Shader shader{"../src/vert.glsl", "../src/frag.glsl"};
 
@@ -181,7 +190,11 @@ void Game::run() {
 
     glm::vec3 player_pos{-1.0f, 0.0f, 0.0f};
     glm::vec3 opponent_pos{1.0f, 0.0f, 0.0f};
-    glm::vec3 square_pos{0.0f, 0.0f, 0.0f};
+    glm::vec3 cube_pos{0.0f, 0.0f, 0.0f};
+    glm::vec2 cube_vel{0.01f, 0.01f};
+    bool test = false;
+    unsigned int player_score = 0;
+    unsigned int opponent_score = 0;
 
     while (!glfwWindowShouldClose(m_window->get_window())) {
         if (glfwGetKey(m_window->get_window(), GLFW_KEY_UP) == GLFW_PRESS) {
@@ -190,6 +203,14 @@ void Game::run() {
 
         if (glfwGetKey(m_window->get_window(), GLFW_KEY_DOWN) == GLFW_PRESS) {
             player_pos.y = std::max(player_pos.y - 0.01f, -1.0f);
+        }
+
+        if (glfwGetKey(m_window->get_window(), GLFW_KEY_W) == GLFW_PRESS) {
+            opponent_pos.y = std::min(opponent_pos.y + 0.01f, 1.0f);
+        }
+
+        if (glfwGetKey(m_window->get_window(), GLFW_KEY_S) == GLFW_PRESS) {
+            opponent_pos.y = std::max(opponent_pos.y - 0.01f, -1.0f);
         }
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -220,21 +241,59 @@ void Game::run() {
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        square_vao.bind();
+        cube_vao.bind();
 
-        square_pos += glm::vec3{-0.001f, 0.0f, 0.0f};
+        if (player_pos.x < cube_pos.x + cube_width &&
+                player_pos.x + rect_width > cube_pos.x &&
+                player_pos.y < cube_pos.y + cube_height + 0.4f &&
+                player_pos.y + rect_height > cube_pos.y - 0.4f) {
+            std::cout << "Collided with player" << std::endl;
+            test = true;
+            cube_vel *= -1;
+        }
+
+        if (opponent_pos.x < cube_pos.x + cube_width &&
+                opponent_pos.x + rect_width > cube_pos.x &&
+                opponent_pos.y < cube_pos.y + cube_height - 0.4f &&
+                opponent_pos.y + rect_height > cube_pos.y + 0.4f) {
+            std::cout << "Collided with opponent" << std::endl;
+            test = false;
+            cube_vel *= -1;
+        }
+
+        if (test) {
+            cube_pos += glm::vec3{cube_vel.x, cube_vel.y, 0.0f};
+            cube_pos.x = std::min(cube_pos.x, 1.5f);
+        } else {
+            cube_pos += glm::vec3{cube_vel.x, cube_vel.y, 0.0f};
+            cube_pos.x = std::max(cube_pos.x, -1.5f);
+        }
+
+        if (cube_pos.x >= 1.5f) {
+            player_score++;
+            cube_pos = {0.0f, 0.0f, 0.0f};
+        } else if (cube_pos.x <= -1.5f) {
+            opponent_score++;
+            cube_pos = {0.0f, 0.0f, 0.0f};
+        }
 
         model = glm::mat4{1.0f};
         model = glm::rotate(model, glm::radians(-40.0f), {1.0f, 0.0f, 0.0f});
-        model = glm::translate(model, square_pos);
+        model = glm::translate(model, cube_pos);
         shader.set_uniform("model", model);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        std::cout << "Player position: " << glm::to_string(player_pos) << "\n"
+                    << "Square position: " << glm::to_string(cube_pos) << std::endl;
 
         glfwSwapBuffers(m_window->get_window());
 
         glfwPollEvents();
     }
+
+    std::cout << "Player score: " << player_score << "\n"
+                << "Opponent score: " << opponent_score << std::endl;
 }
 
 Game::~Game() {
