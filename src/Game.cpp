@@ -189,7 +189,7 @@ void Game::run() {
     glDebugMessageCallback(MessageCallback, 0);
 
     glm::vec3 player_pos{-1.0f, 0.0f, 0.0f};
-    glm::vec3 opponent_pos{1.0f, 0.0f, 0.0f};
+    glm::vec3 opponent_pos{1.0f, 0.5f, 0.0f};
     glm::vec3 cube_pos{0.0f, 0.0f, 0.0f};
     glm::vec2 cube_vel{0.01f, 0.01f};
     bool test = false;
@@ -243,24 +243,6 @@ void Game::run() {
 
         cube_vao.bind();
 
-        if (player_pos.x < cube_pos.x + cube_width &&
-                player_pos.x + rect_width > cube_pos.x &&
-                player_pos.y < cube_pos.y + cube_height + 0.4f &&
-                player_pos.y + rect_height > cube_pos.y - 0.4f) {
-            std::cout << "Collided with player" << std::endl;
-            test = true;
-            cube_vel *= -1;
-        }
-
-        if (opponent_pos.x < cube_pos.x + cube_width &&
-                opponent_pos.x + rect_width > cube_pos.x &&
-                opponent_pos.y < cube_pos.y + cube_height - 0.4f &&
-                opponent_pos.y + rect_height > cube_pos.y + 0.4f) {
-            std::cout << "Collided with opponent" << std::endl;
-            test = false;
-            cube_vel *= -1;
-        }
-
         if (test) {
             cube_pos += glm::vec3{cube_vel.x, cube_vel.y, 0.0f};
             cube_pos.x = std::min(cube_pos.x, 1.5f);
@@ -277,6 +259,28 @@ void Game::run() {
             cube_pos = {0.0f, 0.0f, 0.0f};
         }
 
+        if (
+                player_pos.x < cube_pos.x + cube_width &&
+                player_pos.x + rect_width > cube_pos.x &&
+                player_pos.y < cube_pos.y + cube_height + 0.4f &&
+                player_pos.y + rect_height > cube_pos.y - 0.4f
+            ) {
+            std::cout << "Collided with player" << std::endl;
+            test = true;
+            cube_vel *= -1;
+        }
+
+        if (
+                opponent_pos.x < cube_pos.x + cube_width &&
+                opponent_pos.x - rect_width < cube_pos.x &&
+                opponent_pos.y < cube_pos.y + cube_height + 0.4f &&
+                opponent_pos.y + rect_height > cube_pos.y - 0.4f
+            ) {
+            std::cout << "Collided with opponent" << std::endl;
+            test = false;
+            cube_vel *= -1;
+        }
+
         model = glm::mat4{1.0f};
         model = glm::rotate(model, glm::radians(-40.0f), {1.0f, 0.0f, 0.0f});
         model = glm::translate(model, cube_pos);
@@ -285,7 +289,7 @@ void Game::run() {
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         std::cout << "Player position: " << glm::to_string(player_pos) << "\n"
-                    << "Square position: " << glm::to_string(cube_pos) << std::endl;
+                    << "Square position: " << glm::to_string(cube_pos) << "\n" << std::endl;
 
         glfwSwapBuffers(m_window->get_window());
 
