@@ -26,12 +26,9 @@ FetchContent_Declare(
     FIND_PACKAGE_ARGS 1.0.1
 )
 
-FetchContent_Declare(
-    glad
-    GIT_REPOSITORY https://github.com/Dav1dde/glad.git
-)
+FetchContent_MakeAvailable(glfw glm)
 
-FetchContent_MakeAvailable(glfw glad glm)
+add_subdirectory(external/glad)
 
 add_executable(pong src/main.cpp
     src/Game.cpp include/Game.hpp

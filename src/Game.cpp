@@ -7,10 +7,12 @@
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_float4x4.hpp"
 #include "glm/ext/matrix_transform.hpp"
+#include "glm/geometric.hpp"
 #include "glm/trigonometric.hpp"
-#include <bits/chrono.h>
 #define GLM_ENABLE_EXPERIMENTAL false
 #include "glm/gtx/string_cast.hpp"
+#include <bits/chrono.h>
+#include <random>
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
@@ -202,15 +204,20 @@ void Game::run()
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     glDebugMessageCallback(MessageCallback, 0);
 
+    std::mt19937 rnd{std::random_device{}()};
+    std::uniform_real_distribution<> distribution{0, 1};
+    glm::vec2 cube_vel{distribution(rnd), distribution(rnd)};
+    cube_vel = glm::normalize(cube_vel);
+
     glm::vec3 player_pos{-1.0f, 0.0f, 0.0f};
     glm::vec3 opponent_pos{1.0f, 0.0f, 0.0f};
     glm::vec3 cube_pos{0.0f, 0.0f, 0.0f};
-    glm::vec2 cube_vel{1.0f, 1.0f};
     unsigned int player_score = 0;
     unsigned int opponent_score = 0;
 
     while (!glfwWindowShouldClose(m_window->get_window()))
     {
+        std::cout << glm::to_string(cube_vel) << std::endl;
         if (glfwGetKey(m_window->get_window(), GLFW_KEY_UP) == GLFW_PRESS)
         {
             player_pos.y = std::min(player_pos.y + 0.01f, 1.0f);
@@ -255,6 +262,7 @@ void Game::run()
         model = glm::mat4{1.0f};
         model = glm::rotate(model, glm::radians(-40.0f), {1.0f, 0.0f, 0.0f});
         model = glm::translate(model, opponent_pos);
+
         shader.set_uniform("model", model);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -264,15 +272,16 @@ void Game::run()
         if (cube_pos.x >= 1.5f)
         {
             player_score++;
-            std::cout << "Not Collided with opponent\n"
-                        << "Cube: {" << cube_pos.x << ", " << cube_pos.y << "}\n"
-                        << "Opponent: {" << opponent_pos.x << ", " << opponent_pos.y << "}" << std::endl;
             cube_pos = {0.0f, 0.0f, 0.0f};
+            cube_vel = {distribution(rnd), distribution(rnd)};
+            cube_vel = glm::normalize(cube_vel);
         }
         else if (cube_pos.x <= -1.5f)
         {
             opponent_score++;
             cube_pos = {0.0f, 0.0f, 0.0f};
+            cube_vel = {distribution(rnd), distribution(rnd)};
+            cube_vel = glm::normalize(cube_vel);
         }
 
         if (
@@ -282,7 +291,7 @@ void Game::run()
                 player_pos.y + rect_height > cube_pos.y - 0.4f
             )
         {
-            // std::cout << "Collided with player" << std::endl;
+            // Add some randomness
             cube_vel *= -1;
         }
 
@@ -293,13 +302,11 @@ void Game::run()
                 opponent_pos.y + rect_height > cube_pos.y - 0.4f
             )
         {
-            std::cout << "Collided with opponent\n"
-                        << "Cube: {" << cube_pos.x << ", " << cube_pos.y << "}\n"
-                        << "Opponent: {" << opponent_pos.x << ", " << opponent_pos.y << "}" << std::endl;
+            // Add some randomness
             cube_vel *= -1;
         }
 
-        cube_pos += glm::vec3{cube_vel.x * 0.01f, cube_vel.y * 0.01f, 0.0f};
+        cube_pos += glm::vec3{cube_vel.x * 0.02f, cube_vel.y * 0.02f, 0.0f};
 
         model = glm::mat4{1.0f};
         model = glm::rotate(model, glm::radians(-40.0f), {1.0f, 0.0f, 0.0f});
@@ -307,9 +314,6 @@ void Game::run()
         shader.set_uniform("model", model);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
-
-        // std::cout << "Player position: " << glm::to_string(player_pos) << "\n"
-        //             << "Square position: " << glm::to_string(cube_pos) << "\n" << std::endl;
 
         glfwSwapBuffers(m_window->get_window());
 
