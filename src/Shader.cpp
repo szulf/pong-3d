@@ -6,7 +6,8 @@
 #include <sstream>
 #include <stdexcept>
 
-Shader::Shader(const std::string& vert_file, const std::string& frag_file) {
+Shader::Shader(const std::string& vert_file, const std::string& frag_file)
+{
     std::ifstream vert_fstream{vert_file};
     std::stringstream vert_sstream;
     vert_sstream << vert_fstream.rdbuf();
@@ -26,7 +27,8 @@ Shader::Shader(const std::string& vert_file, const std::string& frag_file) {
     glCompileShader(vert_shader);
 
     glGetShaderiv(vert_shader, GL_COMPILE_STATUS, &status);
-    if (!status) {
+    if (!status)
+    {
         std::array<char, 512> info_log;
         glGetShaderInfoLog(vert_shader, info_log.size(), nullptr, info_log.data());
 
@@ -40,7 +42,8 @@ Shader::Shader(const std::string& vert_file, const std::string& frag_file) {
     glCompileShader(frag_shader);
 
     glGetShaderiv(frag_shader, GL_COMPILE_STATUS, &status);
-    if (!status) {
+    if (!status)
+    {
         std::array<char, 512> info_log;
         glGetShaderInfoLog(frag_shader, info_log.size(), nullptr, info_log.data());
 
@@ -59,7 +62,8 @@ Shader::Shader(const std::string& vert_file, const std::string& frag_file) {
     glDeleteShader(frag_shader);
 
     glGetProgramiv(m_id, GL_LINK_STATUS, &status);
-    if (!status) {
+    if (!status)
+    {
         std::array<char, 512> info_log;
         glGetProgramInfoLog(m_id, info_log.size(), nullptr, info_log.data());
 
@@ -70,20 +74,24 @@ Shader::Shader(const std::string& vert_file, const std::string& frag_file) {
     glUseProgram(m_id);
 }
 
-Shader::~Shader() {
+Shader::~Shader()
+{
     glDeleteProgram(m_id);
 }
 
-void Shader::bind() {
+void Shader::bind()
+{
     glUseProgram(m_id);
 }
 
 template <>
-void Shader::set_uniform<float>(const std::string& name, float value) {
+void Shader::set_uniform<float>(const std::string& name, float value)
+{
     glUniform1f(glGetUniformLocation(m_id, name.c_str()), value);
 }
 
 template <>
-void Shader::set_uniform<glm::mat4>(const std::string& name, glm::mat4 value) {
+void Shader::set_uniform<glm::mat4>(const std::string& name, glm::mat4 value)
+{
     glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }

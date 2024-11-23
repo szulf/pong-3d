@@ -2,7 +2,8 @@
 
 #include <vector>
 
-class VertexBuffer {
+class VertexBuffer
+{
 public:
     VertexBuffer(const std::vector<float>& data, unsigned int vertex_stride);
     ~VertexBuffer();

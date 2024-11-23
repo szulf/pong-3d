@@ -16,42 +16,53 @@
 #include <stdexcept>
 #include <vector>
 
-void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
-                                GLsizei length, const GLchar* message, const void* userParam) {
+void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
     // Filter specific message types if needed (for example, only errors)
-    if (type == GL_DEBUG_TYPE_ERROR) {
+    if (type == GL_DEBUG_TYPE_ERROR)
+    {
         std::cerr << "OpenGL ERROR: " << message << std::endl;
     }
-    else if (type == GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR) {
+    else if (type == GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR)
+    {
         std::cerr << "OpenGL DEPRECATED: " << message << std::endl;
     }
-    else if (type == GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR) {
+    else if (type == GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR)
+    {
         std::cerr << "OpenGL UNDEFINED: " << message << std::endl;
     }
-    else if (type == GL_DEBUG_TYPE_PORTABILITY) {
+    else if (type == GL_DEBUG_TYPE_PORTABILITY)
+    {
         std::cerr << "OpenGL PORTABILITY: " << message << std::endl;
     }
-    else if (type == GL_DEBUG_TYPE_PERFORMANCE) {
+    else if (type == GL_DEBUG_TYPE_PERFORMANCE)
+    {
         std::cerr << "OpenGL PERFORMANCE: " << message << std::endl;
     }
-    else {
+    else
+    {
         std::cerr << "OpenGL: " << message << std::endl;
     }
 
     // Optionally, you could also handle warnings differently or just log everything
-    if (severity == GL_DEBUG_SEVERITY_HIGH) {
+    if (severity == GL_DEBUG_SEVERITY_HIGH) 
+    {
         std::cerr << "High severity error!" << std::endl;
     }
-    else if (severity == GL_DEBUG_SEVERITY_MEDIUM) {
+    else if (severity == GL_DEBUG_SEVERITY_MEDIUM)
+    {
         std::cerr << "Medium severity warning!" << std::endl;
     }
-    else if (severity == GL_DEBUG_SEVERITY_LOW) {
+    else if (severity == GL_DEBUG_SEVERITY_LOW)
+    {
         std::cerr << "Low severity issue." << std::endl;
     }
 }
 
-Game::Game(const std::string& title, int width, int height) {
-    if (!glfwInit()) {
+Game::Game(const std::string& title, int width, int height)
+{
+    if (!glfwInit())
+    {
         throw std::runtime_error{"Error initializing glfw"};
     }
 
@@ -64,7 +75,8 @@ Game::Game(const std::string& title, int width, int height) {
     m_window = new Window{title, width, height};
     glfwMakeContextCurrent(m_window->get_window());
 
-    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
+    {
         glfwTerminate();
         throw std::runtime_error{"Error settings GL Loader\n"};
     }
@@ -73,9 +85,11 @@ Game::Game(const std::string& title, int width, int height) {
     m_window->init_viewport();
 }
 
-void Game::run() {
+void Game::run()
+{
+    // No idea why height is 0.2 but it works that way
     constexpr auto rect_width = 0.2f;
-    constexpr auto rect_height = 1.0f;
+    constexpr auto rect_height = 0.2f;
 
     constexpr auto cube_width = 0.2f;
     constexpr auto cube_height = 0.2f;
@@ -189,27 +203,31 @@ void Game::run() {
     glDebugMessageCallback(MessageCallback, 0);
 
     glm::vec3 player_pos{-1.0f, 0.0f, 0.0f};
-    glm::vec3 opponent_pos{1.0f, 0.5f, 0.0f};
+    glm::vec3 opponent_pos{1.0f, 0.0f, 0.0f};
     glm::vec3 cube_pos{0.0f, 0.0f, 0.0f};
-    glm::vec2 cube_vel{0.01f, 0.01f};
-    bool test = false;
+    glm::vec2 cube_vel{1.0f, 1.0f};
     unsigned int player_score = 0;
     unsigned int opponent_score = 0;
 
-    while (!glfwWindowShouldClose(m_window->get_window())) {
-        if (glfwGetKey(m_window->get_window(), GLFW_KEY_UP) == GLFW_PRESS) {
+    while (!glfwWindowShouldClose(m_window->get_window()))
+    {
+        if (glfwGetKey(m_window->get_window(), GLFW_KEY_UP) == GLFW_PRESS)
+        {
             player_pos.y = std::min(player_pos.y + 0.01f, 1.0f);
         }
 
-        if (glfwGetKey(m_window->get_window(), GLFW_KEY_DOWN) == GLFW_PRESS) {
+        if (glfwGetKey(m_window->get_window(), GLFW_KEY_DOWN) == GLFW_PRESS)
+        {
             player_pos.y = std::max(player_pos.y - 0.01f, -1.0f);
         }
 
-        if (glfwGetKey(m_window->get_window(), GLFW_KEY_W) == GLFW_PRESS) {
+        if (glfwGetKey(m_window->get_window(), GLFW_KEY_W) == GLFW_PRESS)
+        {
             opponent_pos.y = std::min(opponent_pos.y + 0.01f, 1.0f);
         }
 
-        if (glfwGetKey(m_window->get_window(), GLFW_KEY_S) == GLFW_PRESS) {
+        if (glfwGetKey(m_window->get_window(), GLFW_KEY_S) == GLFW_PRESS)
+        {
             opponent_pos.y = std::max(opponent_pos.y - 0.01f, -1.0f);
         }
 
@@ -243,18 +261,16 @@ void Game::run() {
 
         cube_vao.bind();
 
-        if (test) {
-            cube_pos += glm::vec3{cube_vel.x, cube_vel.y, 0.0f};
-            cube_pos.x = std::min(cube_pos.x, 1.5f);
-        } else {
-            cube_pos += glm::vec3{cube_vel.x, cube_vel.y, 0.0f};
-            cube_pos.x = std::max(cube_pos.x, -1.5f);
-        }
-
-        if (cube_pos.x >= 1.5f) {
+        if (cube_pos.x >= 1.5f)
+        {
             player_score++;
+            std::cout << "Not Collided with opponent\n"
+                        << "Cube: {" << cube_pos.x << ", " << cube_pos.y << "}\n"
+                        << "Opponent: {" << opponent_pos.x << ", " << opponent_pos.y << "}" << std::endl;
             cube_pos = {0.0f, 0.0f, 0.0f};
-        } else if (cube_pos.x <= -1.5f) {
+        }
+        else if (cube_pos.x <= -1.5f)
+        {
             opponent_score++;
             cube_pos = {0.0f, 0.0f, 0.0f};
         }
@@ -264,22 +280,26 @@ void Game::run() {
                 player_pos.x + rect_width > cube_pos.x &&
                 player_pos.y < cube_pos.y + cube_height + 0.4f &&
                 player_pos.y + rect_height > cube_pos.y - 0.4f
-            ) {
-            std::cout << "Collided with player" << std::endl;
-            test = true;
+            )
+        {
+            // std::cout << "Collided with player" << std::endl;
             cube_vel *= -1;
         }
 
         if (
                 opponent_pos.x < cube_pos.x + cube_width &&
-                opponent_pos.x - rect_width < cube_pos.x &&
+                opponent_pos.x + rect_width > cube_pos.x &&
                 opponent_pos.y < cube_pos.y + cube_height + 0.4f &&
                 opponent_pos.y + rect_height > cube_pos.y - 0.4f
-            ) {
-            std::cout << "Collided with opponent" << std::endl;
-            test = false;
+            )
+        {
+            std::cout << "Collided with opponent\n"
+                        << "Cube: {" << cube_pos.x << ", " << cube_pos.y << "}\n"
+                        << "Opponent: {" << opponent_pos.x << ", " << opponent_pos.y << "}" << std::endl;
             cube_vel *= -1;
         }
+
+        cube_pos += glm::vec3{cube_vel.x * 0.01f, cube_vel.y * 0.01f, 0.0f};
 
         model = glm::mat4{1.0f};
         model = glm::rotate(model, glm::radians(-40.0f), {1.0f, 0.0f, 0.0f});
@@ -288,8 +308,8 @@ void Game::run() {
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        std::cout << "Player position: " << glm::to_string(player_pos) << "\n"
-                    << "Square position: " << glm::to_string(cube_pos) << "\n" << std::endl;
+        // std::cout << "Player position: " << glm::to_string(player_pos) << "\n"
+        //             << "Square position: " << glm::to_string(cube_pos) << "\n" << std::endl;
 
         glfwSwapBuffers(m_window->get_window());
 
@@ -300,7 +320,8 @@ void Game::run() {
                 << "Opponent score: " << opponent_score << std::endl;
 }
 
-Game::~Game() {
+Game::~Game()
+{
     delete m_window;
     glfwTerminate();
 }

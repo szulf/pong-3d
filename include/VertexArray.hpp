@@ -1,6 +1,7 @@
 #pragma once
 
-class VertexArray {
+class VertexArray
+{
 public:
     VertexArray();
     ~VertexArray();

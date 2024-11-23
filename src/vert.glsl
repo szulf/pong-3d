@@ -9,7 +9,8 @@ uniform mat4 projection;
 
 out float color;
 
-void main() {
+void main()
+{
     gl_Position = projection * view * model * vec4(a_pos, 1.0f);
     color = a_color;
 }

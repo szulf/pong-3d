@@ -2,7 +2,8 @@
 
 #include "Window.hpp"
 
-class Game {
+class Game
+{
 public:
     Game(const std::string& title, int width, int height);
     ~Game();
