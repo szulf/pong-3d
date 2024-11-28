@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Window.hpp"
+#include <optional>
 
 class Game
 {
@@ -11,5 +12,6 @@ public:
     void run();
 
 private:
-    Window* m_window;
+    // Window* m_window;
+    std::optional<Window> m_window;
 };

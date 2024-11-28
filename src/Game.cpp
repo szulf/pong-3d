@@ -9,6 +9,7 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/geometric.hpp"
 #include "glm/trigonometric.hpp"
+#include <optional>
 #define GLM_ENABLE_EXPERIMENTAL false
 #include "glm/gtx/string_cast.hpp"
 #include <bits/chrono.h>
@@ -61,7 +62,7 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum se
     }
 }
 
-Game::Game(const std::string& title, int width, int height)
+Game::Game(const std::string& title, int width, int height) : m_window{std::nullopt}
 {
     if (!glfwInit())
     {
@@ -74,7 +75,7 @@ Game::Game(const std::string& title, int width, int height)
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
-    m_window = new Window{title, width, height};
+    m_window = std::optional{Window{title, width, height}};
     glfwMakeContextCurrent(m_window->get_window());
 
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
@@ -331,7 +332,6 @@ void Game::run()
 
 Game::~Game()
 {
-    delete m_window;
     glfwTerminate();
 }
 
