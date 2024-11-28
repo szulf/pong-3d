@@ -284,6 +284,11 @@ void Game::run()
             cube_vel = glm::normalize(cube_vel);
         }
 
+        if (cube_pos.y >= 1.0f || cube_pos.y <= -1.0f)
+        {
+            cube_vel.y *= -1;
+        }
+
         if (
                 player_pos.x < cube_pos.x + cube_width &&
                 player_pos.x + rect_width > cube_pos.x &&
@@ -292,7 +297,7 @@ void Game::run()
             )
         {
             // Add some randomness
-            cube_vel *= -1;
+            cube_vel.x *= -1;
         }
 
         if (
@@ -303,7 +308,7 @@ void Game::run()
             )
         {
             // Add some randomness
-            cube_vel *= -1;
+            cube_vel.x *= -1;
         }
 
         cube_pos += glm::vec3{cube_vel.x * 0.02f, cube_vel.y * 0.02f, 0.0f};

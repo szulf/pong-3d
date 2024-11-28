@@ -28,7 +28,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(glfw glm)
 
-add_subdirectory(external/glad)
+add_subdirectory(vendor/glad)
 
 add_executable(pong src/main.cpp
     src/Game.cpp include/Game.hpp
