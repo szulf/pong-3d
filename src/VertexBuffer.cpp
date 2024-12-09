@@ -2,7 +2,7 @@
 #include "Window.hpp"
 #include <cstdio>
 
-VertexBuffer::VertexBuffer(const std::vector<float>& data, unsigned int vertex_stride) : m_vertex_stride{vertex_stride}, m_pos{0}
+VertexBuffer::VertexBuffer(const std::span<float>& data, unsigned int vertex_stride) : m_vertex_stride{vertex_stride}, m_pos{0}
 {
     glGenBuffers(1, &m_id);
     glBindBuffer(GL_ARRAY_BUFFER, m_id);
@@ -15,13 +15,13 @@ VertexBuffer::~VertexBuffer()
     glDeleteBuffers(1, &m_id);
 }
 
-void VertexBuffer::bind()
+auto VertexBuffer::bind() -> void
 {
     glBindBuffer(GL_ARRAY_BUFFER, m_id);
 }
 
 template <>
-void VertexBuffer::set_attrib_pointer<float>(unsigned int size, unsigned int pointer)
+auto VertexBuffer::set_attrib_pointer<float>(unsigned int size, unsigned int pointer) -> void
 {
     glVertexAttribPointer(m_pos, size, GL_FLOAT, false, m_vertex_stride * sizeof(float), reinterpret_cast<void*>(pointer * sizeof(float)));
     glEnableVertexAttribArray(m_pos);

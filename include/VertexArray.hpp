@@ -6,7 +6,7 @@ public:
     VertexArray();
     ~VertexArray();
 
-    void bind();
+    auto bind() -> void;
 
 private:
     unsigned int m_id;

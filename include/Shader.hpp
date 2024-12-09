@@ -7,10 +7,10 @@ public:
     Shader(const std::string& vert_file, const std::string& frag_file);
     ~Shader();
 
-    void bind();
+    auto bind() -> void;
 
     template <typename T>
-    void set_uniform(const std::string& name, T value);
+    auto set_uniform(const std::string& name, T value) -> void;
 private:
     unsigned int m_id;
 };

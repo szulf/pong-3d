@@ -88,7 +88,7 @@ Game::Game(const std::string& title, int width, int height) : m_window{std::null
     m_window->init_viewport();
 }
 
-void Game::run()
+auto Game::run() -> void
 {
     // No idea why height is 0.2 but it works that way
     constexpr auto rect_width = 0.2f;
@@ -218,7 +218,6 @@ void Game::run()
 
     while (!glfwWindowShouldClose(m_window->get_window()))
     {
-        std::cout << glm::to_string(cube_vel) << std::endl;
         if (glfwGetKey(m_window->get_window(), GLFW_KEY_UP) == GLFW_PRESS)
         {
             player_pos.y = std::min(player_pos.y + 0.01f, 1.0f);

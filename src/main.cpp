@@ -9,7 +9,7 @@ int main()
         Game game{"Pong 3D", 800, 600};
         game.run();
     }
-    catch (std::runtime_error e)
+    catch (const std::runtime_error& e)
     {
         std::printf("%s", e.what());
     }

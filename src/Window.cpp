@@ -27,13 +27,13 @@ Window& Window::operator=(Window&& other) noexcept
     return *this;
 }
 
-void Window::init_viewport()
+auto Window::init_viewport() -> void
 {
     glViewport(0, 0, m_width, m_height);
     glfwSetFramebufferSizeCallback(m_window.get(), framebuffer_size_callback);
 }
 
-void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
+auto Window::framebuffer_size_callback(GLFWwindow* window, int width, int height) -> void
 {
     glViewport(0, 0, width, height);
 }

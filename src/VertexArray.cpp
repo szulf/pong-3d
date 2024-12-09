@@ -12,7 +12,7 @@ VertexArray::~VertexArray()
     glDeleteVertexArrays(1, &m_id);
 }
 
-void VertexArray::bind()
+auto VertexArray::bind() -> void
 {
     glBindVertexArray(m_id);
 }

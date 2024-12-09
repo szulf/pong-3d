@@ -1,17 +1,17 @@
 #pragma once
 
-#include <vector>
+#include <span>
 
 class VertexBuffer
 {
 public:
-    VertexBuffer(const std::vector<float>& data, unsigned int vertex_stride);
+    VertexBuffer(const std::span<float>& data, unsigned int vertex_stride);
     ~VertexBuffer();
 
-    void bind();
+    auto bind() -> void;
 
     template <typename T>
-    void set_attrib_pointer(unsigned int size, unsigned int pointer);
+    auto set_attrib_pointer(unsigned int size, unsigned int pointer) -> void;
 
 private:
     unsigned int m_id;

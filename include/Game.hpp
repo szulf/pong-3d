@@ -9,9 +9,8 @@ public:
     Game(const std::string& title, int width, int height);
     ~Game();
 
-    void run();
+    auto run() -> void;
 
 private:
-    // Window* m_window;
     std::optional<Window> m_window;
 };

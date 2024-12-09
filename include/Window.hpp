@@ -36,7 +36,7 @@ public:
         return m_height;
     }
 
-    void init_viewport();
+    auto init_viewport() -> void;
 private:
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
