@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Renderer.hpp"
 #include "Window.hpp"
 #include <optional>
 
@@ -13,4 +14,5 @@ public:
 
 private:
     std::optional<Window> m_window;
+    std::optional<Renderer> m_renderer;
 };

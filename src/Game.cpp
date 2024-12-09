@@ -62,7 +62,7 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum se
     }
 }
 
-Game::Game(const std::string& title, int width, int height) : m_window{std::nullopt}
+Game::Game(const std::string& title, int width, int height) : m_window{std::nullopt}, m_renderer{std::nullopt}
 {
     if (!glfwInit())
     {
@@ -75,7 +75,7 @@ Game::Game(const std::string& title, int width, int height) : m_window{std::null
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
-    m_window = std::optional{Window{title, width, height}};
+    m_window = std::make_optional<Window>(title, width, height);
     glfwMakeContextCurrent(m_window->get_window());
 
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))

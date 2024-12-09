@@ -36,6 +36,7 @@ add_executable(pong src/main.cpp
     src/Shader.cpp include/Shader.hpp
     src/VertexArray.cpp include/VertexArray.hpp
     src/VertexBuffer.cpp include/VertexBuffer.hpp
+    src/Renderer.cpp include/Renderer.hpp
 )
 
 target_include_directories(pong PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
