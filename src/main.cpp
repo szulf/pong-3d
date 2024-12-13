@@ -1,6 +1,6 @@
 #include "Game.hpp"
 #include <cstdio>
-#include <stdexcept>
+#include <iostream>
 
 int main()
 {
@@ -11,7 +11,7 @@ int main()
     }
     catch (const std::runtime_error& e)
     {
-        std::printf("%s", e.what());
+        std::cout << e.what();
     }
 
     return 0;

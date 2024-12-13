@@ -1,7 +1,9 @@
 #include "Game.hpp"
 #include "GLFW/glfw3.h"
+#include "Mesh.hpp"
 #include "Shader.hpp"
 #include "VertexArray.hpp"
+#include "VertexAttrib.hpp"
 #include "VertexBuffer.hpp"
 #include "Window.hpp"
 #include "glm/ext/matrix_clip_space.hpp"
@@ -184,6 +186,13 @@ auto Game::run() -> void
         0.1f, -0.1f, -0.1f, 1.0f,
         0.1f, -0.1f, 0.1f, 1.0f,
     };
+
+    std::vector<VertexAttrib> rect_attribs{
+        { 3, GL_FLOAT, false, 4 * sizeof(float), 0 },
+        { 1, GL_FLOAT, false, 4 * sizeof(float), reinterpret_cast<void*>(3 * sizeof(float)) },
+    };
+
+    Mesh rect_mesh{rect_vertices, rect_attribs};
 
     VertexArray rect_vao;
     VertexArray cube_vao;
