@@ -98,8 +98,6 @@ auto Game::run() -> void
     const auto cube_width = 0.2f;
     const auto cube_height = 0.2f;
 
-    const bool ai = true;
-
     std::vector rect_vertices{
         -0.1f, -0.5f, 0.1f, 0.5f,
         -0.1f, 0.5f, 0.1f, 0.5f,
@@ -220,15 +218,22 @@ auto Game::run() -> void
     glm::vec3 cube_pos{0.0f, 0.0f, 0.0f};
     unsigned int player_score = 0;
     unsigned int opponent_score = 0;
+    bool ai = true;
+    bool bounce_flag = true;
 
     while (!glfwWindowShouldClose(m_window->get_window()))
     {
-        if (glfwGetKey(m_window->get_window(), GLFW_KEY_UP) == GLFW_PRESS)
+        if (glfwGetKey(m_window->get_window(), GLFW_KEY_ENTER) == GLFW_PRESS)
+        {
+            ai = !ai;
+        }
+
+        if (glfwGetKey(m_window->get_window(), GLFW_KEY_W) == GLFW_PRESS)
         {
             player_pos.y = std::min(player_pos.y + 0.01f, 1.0f);
         }
 
-        if (glfwGetKey(m_window->get_window(), GLFW_KEY_DOWN) == GLFW_PRESS)
+        if (glfwGetKey(m_window->get_window(), GLFW_KEY_S) == GLFW_PRESS)
         {
             player_pos.y = std::max(player_pos.y - 0.01f, -1.0f);
         }
@@ -241,18 +246,17 @@ auto Game::run() -> void
             }
             else
             {
-
                 opponent_pos.y = std::max(opponent_pos.y - 0.01f, -1.0f);
             }
         }
         else
         {
-            if (glfwGetKey(m_window->get_window(), GLFW_KEY_W) == GLFW_PRESS)
+            if (glfwGetKey(m_window->get_window(), GLFW_KEY_UP) == GLFW_PRESS)
             {
                 opponent_pos.y = std::min(opponent_pos.y + 0.01f, 1.0f);
             }
 
-            if (glfwGetKey(m_window->get_window(), GLFW_KEY_S) == GLFW_PRESS)
+            if (glfwGetKey(m_window->get_window(), GLFW_KEY_DOWN) == GLFW_PRESS)
             {
                 opponent_pos.y = std::max(opponent_pos.y - 0.01f, -1.0f);
             }
@@ -295,6 +299,7 @@ auto Game::run() -> void
             cube_pos = {0.0f, 0.0f, 0.0f};
             cube_vel = {x_distribution(rnd), y_distribution(rnd)};
             cube_vel = glm::normalize(cube_vel);
+            bounce_flag = true;
         }
         else if (cube_pos.x <= -1.5f)
         {
@@ -302,6 +307,7 @@ auto Game::run() -> void
             cube_pos = {0.0f, 0.0f, 0.0f};
             cube_vel = {x_distribution(rnd), y_distribution(rnd)};
             cube_vel = glm::normalize(cube_vel);
+            bounce_flag = true;
         }
 
         if (cube_pos.y >= 1.0f || cube_pos.y <= -1.0f)
@@ -313,22 +319,26 @@ auto Game::run() -> void
                 player_pos.x < cube_pos.x + cube_width &&
                 player_pos.x + rect_width > cube_pos.x &&
                 player_pos.y < cube_pos.y + cube_height + 0.4f &&
-                player_pos.y + rect_height > cube_pos.y - 0.4f
+                player_pos.y + rect_height > cube_pos.y - 0.4f &&
+                !bounce_flag
             )
         {
             cube_vel.x *= -1;
             cube_vel += glm::vec2{collision_distribution(rnd), collision_distribution(rnd)};
+            bounce_flag = !bounce_flag;
         }
 
         if (
                 opponent_pos.x < cube_pos.x + cube_width &&
                 opponent_pos.x + rect_width > cube_pos.x &&
                 opponent_pos.y < cube_pos.y + cube_height + 0.4f &&
-                opponent_pos.y + rect_height > cube_pos.y - 0.4f
+                opponent_pos.y + rect_height > cube_pos.y - 0.4f &&
+                bounce_flag
             )
         {
             cube_vel.x *= -1;
             cube_vel += glm::vec2{collision_distribution(rnd), collision_distribution(rnd)};
+            bounce_flag = !bounce_flag;
         }
 
         cube_pos += glm::vec3{cube_vel.x * 0.02f, cube_vel.y * 0.02f, 0.0f};
