@@ -79,7 +79,7 @@ Shader::~Shader()
     glDeleteProgram(m_id);
 }
 
-auto Shader::bind() -> void
+auto Shader::bind() const -> void
 {
     glUseProgram(m_id);
 }

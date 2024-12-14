@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "GLFW/glfw3.h"
+#include "Material.hpp"
 #include "Mesh.hpp"
 #include "Shader.hpp"
 #include "VertexArray.hpp"
@@ -192,7 +193,6 @@ auto Game::run() -> void
         { 1, GL_FLOAT, false, 4 * sizeof(float), reinterpret_cast<void*>(3 * sizeof(float)) },
     };
 
-    Mesh rect_mesh{rect_vertices, rect_attribs};
 
     VertexArray rect_vao;
     VertexArray cube_vao;
@@ -208,6 +208,9 @@ auto Game::run() -> void
     cube_vbo.set_attrib_pointer<float>(1, 3);
 
     Shader shader{"../src/vert.glsl", "../src/frag.glsl"};
+
+    Mesh rect_mesh{rect_vertices, rect_attribs};
+    Material rect_material{shader};
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_DEBUG_OUTPUT);

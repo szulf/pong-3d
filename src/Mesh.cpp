@@ -27,7 +27,7 @@ Mesh::~Mesh()
     glDeleteVertexArrays(1, &m_vao);
 }
 
-auto Mesh::bind() -> void
+auto Mesh::bind() const -> void
 {
     glBindVertexArray(m_vao);
 }

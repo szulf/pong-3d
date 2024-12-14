@@ -20,6 +20,9 @@ public:
         requires is_renderable<T>
     auto render(const T& render_item) -> void;
 
-private:
+    template <typename T>
+        requires is_renderable<T>
+    auto submit(const T& renderable) -> void;
 
+private:
 };

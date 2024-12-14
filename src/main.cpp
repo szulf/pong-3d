@@ -1,5 +1,4 @@
 #include "Game.hpp"
-#include <cstdio>
 #include <iostream>
 
 int main()

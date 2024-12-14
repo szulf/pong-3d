@@ -39,6 +39,7 @@ add_executable(pong src/main.cpp
     src/Renderer.cpp include/Renderer.hpp
     src/Mesh.cpp include/Mesh.hpp
     include/Rect.hpp
+    include/VertexAttrib.hpp
 )
 
 target_include_directories(pong PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

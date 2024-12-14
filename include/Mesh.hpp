@@ -9,7 +9,7 @@ class Mesh
 public:
     Mesh(const std::vector<float>& vertices, const std::vector<VertexAttrib> attribs);
     ~Mesh();
-    auto bind() -> void;
+    auto bind() const -> void;
 
 private:
     std::size_t m_vertex_count;
