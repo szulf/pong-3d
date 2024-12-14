@@ -2,7 +2,8 @@
 
 ![gif](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXZidnA5YXM3ODJ0cW1iajc1ZzZ4aWk3OG1wNzJkanFrdTFtYmVtMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/os2cCCPk7hme3iSUSm/giphy.gif)
 
-Pong game with a little bit of 3D graphics, written in OpenGL.
+Pong game with a little bit of 3D graphics, written in OpenGL. \
+Finished for now.
 
 #### Featuring
 - Pretty janky collisions
