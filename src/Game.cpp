@@ -7,6 +7,7 @@
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_float4x4.hpp"
 #include "glm/ext/matrix_transform.hpp"
+#include "glm/ext/vector_float2.hpp"
 #include "glm/geometric.hpp"
 #include "glm/trigonometric.hpp"
 #include <optional>
@@ -208,8 +209,10 @@ auto Game::run() -> void
     glDebugMessageCallback(MessageCallback, 0);
 
     std::mt19937 rnd{std::random_device{}()};
-    std::uniform_real_distribution<> distribution{0, 1};
-    glm::vec2 cube_vel{distribution(rnd), distribution(rnd)};
+    std::uniform_real_distribution<> x_distribution{0.1f, 0.3f};
+    std::uniform_real_distribution<> y_distribution{0.1f, 0.2f};
+    std::uniform_real_distribution<> collision_distribution{-0.1f, 0.1f};
+    glm::vec2 cube_vel{x_distribution(rnd), y_distribution(rnd)};
     cube_vel = glm::normalize(cube_vel);
 
     glm::vec3 player_pos{-1.0f, 0.0f, 0.0f};
@@ -290,14 +293,14 @@ auto Game::run() -> void
         {
             player_score++;
             cube_pos = {0.0f, 0.0f, 0.0f};
-            cube_vel = {distribution(rnd), distribution(rnd)};
+            cube_vel = {x_distribution(rnd), y_distribution(rnd)};
             cube_vel = glm::normalize(cube_vel);
         }
         else if (cube_pos.x <= -1.5f)
         {
             opponent_score++;
             cube_pos = {0.0f, 0.0f, 0.0f};
-            cube_vel = {distribution(rnd), distribution(rnd)};
+            cube_vel = {x_distribution(rnd), y_distribution(rnd)};
             cube_vel = glm::normalize(cube_vel);
         }
 
@@ -313,8 +316,8 @@ auto Game::run() -> void
                 player_pos.y + rect_height > cube_pos.y - 0.4f
             )
         {
-            // Add some randomness
             cube_vel.x *= -1;
+            cube_vel += glm::vec2{collision_distribution(rnd), collision_distribution(rnd)};
         }
 
         if (
@@ -324,8 +327,8 @@ auto Game::run() -> void
                 opponent_pos.y + rect_height > cube_pos.y - 0.4f
             )
         {
-            // Add some randomness
             cube_vel.x *= -1;
+            cube_vel += glm::vec2{collision_distribution(rnd), collision_distribution(rnd)};
         }
 
         cube_pos += glm::vec3{cube_vel.x * 0.02f, cube_vel.y * 0.02f, 0.0f};
