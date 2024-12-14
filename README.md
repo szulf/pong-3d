@@ -11,8 +11,8 @@ Finished for now.
 - Absolutely no colors
 
 ## Gameplay
-Press W/S to control the player rectangle.
-Press Enter to switch between an AI and controling the opponent rectangle.
+Press W/S to control the player rectangle. \
+Press Enter to switch between an AI and controling the opponent rectangle. \
 Press Up/Down to control the opponent rectangle.
 
 ## Compilation
