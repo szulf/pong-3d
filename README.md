@@ -37,3 +37,7 @@ And run
 ```bash
 ./pong
 ```
+
+---
+
+Importing with Visual Studio almost works, you just need to change the path to the shaders in Game.cpp(because the directory structure differs there) from `../src/shader_name` to `../../../src/shader_name`(line 201).

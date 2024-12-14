@@ -13,7 +13,6 @@
 #include <optional>
 #define GLM_ENABLE_EXPERIMENTAL false
 #include "glm/gtx/string_cast.hpp"
-#include <bits/chrono.h>
 #include <random>
 #include <algorithm>
 #include <iostream>
