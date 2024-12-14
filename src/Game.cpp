@@ -91,11 +91,13 @@ Game::Game(const std::string& title, int width, int height) : m_window{std::null
 auto Game::run() -> void
 {
     // No idea why height is 0.2 but it works that way
-    constexpr auto rect_width = 0.2f;
-    constexpr auto rect_height = 0.2f;
+    const auto rect_width = 0.2f;
+    const auto rect_height = 0.2f;
 
-    constexpr auto cube_width = 0.2f;
-    constexpr auto cube_height = 0.2f;
+    const auto cube_width = 0.2f;
+    const auto cube_height = 0.2f;
+
+    const bool ai = true;
 
     std::vector rect_vertices{
         -0.1f, -0.5f, 0.1f, 0.5f,
@@ -228,14 +230,29 @@ auto Game::run() -> void
             player_pos.y = std::max(player_pos.y - 0.01f, -1.0f);
         }
 
-        if (glfwGetKey(m_window->get_window(), GLFW_KEY_W) == GLFW_PRESS)
+        if (ai)
         {
-            opponent_pos.y = std::min(opponent_pos.y + 0.01f, 1.0f);
-        }
+            if (cube_pos.y > opponent_pos.y)
+            {
+                opponent_pos.y = std::min(opponent_pos.y + 0.01f, 1.0f);
+            }
+            else
+            {
 
-        if (glfwGetKey(m_window->get_window(), GLFW_KEY_S) == GLFW_PRESS)
+                opponent_pos.y = std::max(opponent_pos.y - 0.01f, -1.0f);
+            }
+        }
+        else
         {
-            opponent_pos.y = std::max(opponent_pos.y - 0.01f, -1.0f);
+            if (glfwGetKey(m_window->get_window(), GLFW_KEY_W) == GLFW_PRESS)
+            {
+                opponent_pos.y = std::min(opponent_pos.y + 0.01f, 1.0f);
+            }
+
+            if (glfwGetKey(m_window->get_window(), GLFW_KEY_S) == GLFW_PRESS)
+            {
+                opponent_pos.y = std::max(opponent_pos.y - 0.01f, -1.0f);
+            }
         }
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
