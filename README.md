@@ -18,13 +18,18 @@ Press Up/Down to control the opponent rectangle.
 
 Clone the repo
 ```bash
-git clone https://github.com/szulf/pong-3d
+git clone https://github.com/szulf/pong-3d && cd pong-3d
 ```
 
 Build with cmake
 ```bash
 mkdir build && cd build
 cmake build ../
+```
+
+Compile the project
+```bash
+make
 ```
 
 And run
