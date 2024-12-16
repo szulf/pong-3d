@@ -19,49 +19,6 @@
 #include <stdexcept>
 #include <vector>
 
-void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
-{
-    // Filter specific message types if needed (for example, only errors)
-    if (type == GL_DEBUG_TYPE_ERROR)
-    {
-        std::cerr << "OpenGL ERROR: " << message << std::endl;
-    }
-    else if (type == GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR)
-    {
-        std::cerr << "OpenGL DEPRECATED: " << message << std::endl;
-    }
-    else if (type == GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR)
-    {
-        std::cerr << "OpenGL UNDEFINED: " << message << std::endl;
-    }
-    else if (type == GL_DEBUG_TYPE_PORTABILITY)
-    {
-        std::cerr << "OpenGL PORTABILITY: " << message << std::endl;
-    }
-    else if (type == GL_DEBUG_TYPE_PERFORMANCE)
-    {
-        std::cerr << "OpenGL PERFORMANCE: " << message << std::endl;
-    }
-    else
-    {
-        std::cerr << "OpenGL: " << message << std::endl;
-    }
-
-    // Optionally, you could also handle warnings differently or just log everything
-    if (severity == GL_DEBUG_SEVERITY_HIGH) 
-    {
-        std::cerr << "High severity error!" << std::endl;
-    }
-    else if (severity == GL_DEBUG_SEVERITY_MEDIUM)
-    {
-        std::cerr << "Medium severity warning!" << std::endl;
-    }
-    else if (severity == GL_DEBUG_SEVERITY_LOW)
-    {
-        std::cerr << "Low severity issue." << std::endl;
-    }
-}
-
 Game::Game(const std::string& title, int width, int height) : m_window{std::nullopt}
 {
     if (!glfwInit())
@@ -70,8 +27,8 @@ Game::Game(const std::string& title, int width, int height) : m_window{std::null
     }
 
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
@@ -201,9 +158,6 @@ auto Game::run() -> void
     Shader shader{"../src/vert.glsl", "../src/frag.glsl"};
 
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_DEBUG_OUTPUT);
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback(MessageCallback, 0);
 
     std::mt19937 rnd{std::random_device{}()};
     std::uniform_real_distribution<> x_distribution{0.1f, 0.3f};
